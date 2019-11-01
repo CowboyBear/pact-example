@@ -1,0 +1,36 @@
+plugins {
+    id 'org.springframework.boot' version '2.2.0.RELEASE'
+    id 'io.spring.dependency-management' version '1.0.8.RELEASE'
+    id 'java'
+    id "au.com.dius.pact" version "4.0.0"
+}
+
+group = 'com.xom'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '1.8'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter'
+    testImplementation('org.springframework.boot:spring-boot-starter-test') {
+        exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+    }
+
+    // https://mvnrepository.com/artifact/au.com.dius/pact-jvm-consumer-junit5
+    compile group: 'au.com.dius', name: 'pact-jvm-consumer-junit5', version: '4.0.2'
+}
+
+test {
+    useJUnitPlatform()
+    systemProperties['pact.rootDir'] = "src/main/resources/pacts"
+}
+
+pact {
+    publish {
+        pactDirectory = 'src/main/resources/pacts' // defaults to $buildDir/pacts
+        pactBrokerUrl = 'http://localhost:9292'
+    }
+}

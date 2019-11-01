@@ -1,0 +1,91 @@
+{
+  "provider": {
+    "name": "OrderAPI"
+  },
+  "consumer": {
+    "name": "orderConsumer"
+  },
+  "interactions": [
+    {
+      "description": "a request filtering orders by AP stripes instace",
+      "request": {
+        "method": "GET",
+        "path": "/orders",
+        "query": {
+          "filters[stripesInstance]": [
+            "ap"
+          ]
+        }
+      },
+      "response": {
+        "status": 200,
+        "body": {}
+      },
+      "providerStates": [
+        {
+          "name": "It has orders in AP stripes instance"
+        }
+      ]
+    },
+    {
+      "description": "a request for the order ap-1234567890",
+      "request": {
+        "method": "GET",
+        "path": "/orders/ap-1234567890"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+          "Content-Type": "application/json; charset\u003dUTF-8"
+        },
+        "body": {
+          "id": "string"
+        },
+        "matchingRules": {
+          "body": {
+            "$.id": {
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ],
+              "combine": "AND"
+            }
+          },
+          "header": {
+            "Content-Type": {
+              "matchers": [
+                {
+                  "match": "regex",
+                  "regex": "application/json(;\\s?charset\u003d[\\w\\-]+)?"
+                }
+              ],
+              "combine": "AND"
+            }
+          }
+        },
+        "generators": {
+          "body": {
+            "$.id": {
+              "type": "RandomString",
+              "size": 20
+            }
+          }
+        }
+      },
+      "providerStates": [
+        {
+          "name": "It has orders"
+        }
+      ]
+    }
+  ],
+  "metadata": {
+    "pactSpecification": {
+      "version": "3.0.0"
+    },
+    "pact-jvm": {
+      "version": "4.0.2"
+    }
+  }
+}
